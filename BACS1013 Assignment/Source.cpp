@@ -138,8 +138,6 @@ void modeSelection(string text)
         case 1: logIn("Please log in."); break;
         case 2: guestEventList(); break;
         default: modeSelection("Invalid code. Please try again.");
-        
-
     }
 }
 
@@ -231,7 +229,31 @@ void guestEventList() {
 
 void showEventDetails()
 {
-    cout << "\n| 1 Join Event | 2 Back | ";
+    int id, choice;
+    system("cls");
+    showEvents();
+    cout << "\nSelect Event ID: >";
+    cin >> id;
+
+    system("cls");
+    for (int i = 0; i < eventCount; i++) {
+        if (eventId[i] == id) {
+
+            cout << "Name: " << eventName[i] << endl;
+            cout << "Start Date: " << eventStartDate[i] << endl;
+            cout << "End Date: " << eventEndDate[i] << endl;
+            cout << "Pax: " << eventPax[i] << endl;
+           
+            cout << "\n| 1 Join Event | 2 Back | >";
+            cin >> choice;
+
+            switch (choice) {
+            case 1: joinEvent(); break;
+            case 2: guestEventList(); break;
+            }
+
+        }
+    }
 }
 
 void createEvent() {
