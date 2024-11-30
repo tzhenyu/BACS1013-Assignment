@@ -191,7 +191,7 @@ void adminEventList() {int nextEventId = 1;   // Auto-increment ID counter
     case 2: createEvent(); break;
     case 3: modeSelection("Are you..?"); break;
     case 0: cout << "Bye!"; break;
-    default: guestEventList();
+    default: adminEventList();
     }
 }
 
@@ -233,7 +233,8 @@ void showEventDetails()
 
             switch (choice) {
             case 1: joinEvent(); break;
-            case 2: guestEventList(); break;
+            case 2: showEventDetails(); break;
+            default: cout << '\a'; guestEventList(); break;
             }
 
         }
@@ -243,7 +244,7 @@ void showEventDetails()
 void createEvent() {
     system("cls");
     if (eventCount >= records) {
-        cout << "Student database is full!\n";
+        cout << "Cannot add event! Reached maximum storage!\n";
         return;
     }
 
