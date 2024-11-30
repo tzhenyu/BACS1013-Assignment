@@ -37,7 +37,7 @@ void eventReporting();
 
 //Constant variable declaration
 const string FILE_PATH = "data.txt"; // File path
-const int records = 100;         // Event Max Record 
+const int records = 100;             // Event Max Record 
 
 //Vairiable declaration
 int mode;
@@ -48,7 +48,7 @@ string eventEndDate[records];
 string eventPlace[records];
 int eventPax[records];
 
-int eventCount = 0;  // Current number of students
+int eventCount = 0;  // Current number of events
 int nextEventId = 1;   // Auto-increment ID counter
 
 //Main menu
@@ -236,7 +236,6 @@ void showEventDetails()
             case 2: showEventDetails(); break;
             default: cout << '\a'; guestEventList(); break;
             }
-
         }
     }
 }
@@ -260,8 +259,7 @@ void createEvent() {
 
     cout << '\a' << "Event added successfully! Press Enter to continue...";
 
-    cin.ignore(); 
-    cin.ignore(); //for some reason i have to add one more function to make it work
+    cin.ignore(2); 
 
     saveData(); // Save data after adding a student
     adminEventList();
@@ -278,8 +276,9 @@ void editEvent() {
     cout << "\nSelect Event ID: >";
     cin >> id;    
 
-    cout << "Options..." << endl;
     //do your thing
+    cout << "Options..." << endl;
+    
 }
 
 
