@@ -53,8 +53,20 @@ int nextEventId = 1;   // Auto-increment ID counter
 
 //Main menu
 int main() {
-    welcomeScreen();
-    modeSelection("Are you Host or Guest? Prompt to select");
+    int mode;
+
+    system("cls");
+
+    cout << "are you ?" << endl;
+    cout << "1 guest" << endl;
+    cout << "2 host" << endl;
+    cin >> mode; 
+
+    switch (mode) {
+    case 1: guestEventList(); break;
+    case 2: adminEventList(); break;
+    default: cout << '\a'; main(); break;
+    }
 
 }
 
@@ -120,46 +132,18 @@ void loadData() {
 
 void welcomeScreen()
 {
-    cout << "Hi test, press ENTER to continue...";
-    cin.ignore();
     
 }
 
 void modeSelection(string text)
 {
-        system("cls");
-        cout << text << endl;
-        cout << "[1] Host" << endl;
-        cout << "[2] Guest" << endl;
-        cout << ">";
-        cin >> mode;
 
-        switch (mode) {
-        case 1: logIn("Please log in."); break;
-        case 2: guestEventList(); break;
-        default: modeSelection("Invalid code. Please try again.");
-    }
 }
 
 void logIn(string text)
 {
     string username, password;
 
-    system("cls");
-    cout << text << endl;
-    cout << "Username: ";
-    cin >> username;
-    cout << "Password: ";
-    cin >> password;
-
-    if (username == "admin" && password == "admin") {
-        adminEventList();
-        
-    }
-    else {
-        logIn("Wrong username or password");
-            
-    }
 }
 
 
@@ -205,7 +189,7 @@ void adminEventList() {int nextEventId = 1;   // Auto-increment ID counter
     switch (choice) {
     case 1: editEvent(); break;
     case 2: createEvent(); break;
-    case 3: modeSelection(""); break;
+    case 3: modeSelection("Are you..?"); break;
     case 0: cout << "Bye!"; break;
     default: guestEventList();
     }
@@ -221,7 +205,7 @@ void guestEventList() {
 
     switch (choice) {
     case 1: showEventDetails(); break;
-    case 2: modeSelection(""); break;
+    case 2: modeSelection("Are you..?"); break;
     case 0: cout << "Bye!"; break;
     default: guestEventList();
     }
@@ -271,8 +255,12 @@ void createEvent() {
     cin >> eventPax[eventCount];
 
     eventCount++; // Increment the count
-    cout << '\a' << "Event added successfully!\n";
-    cin.ignore();
+
+
+    cout << '\a' << "Event added successfully! Press Enter to continue...";
+
+    cin.ignore(); 
+    cin.ignore(); //for some reason i have to add one more function to make it work
 
     saveData(); // Save data after adding a student
     adminEventList();
@@ -287,25 +275,10 @@ void editEvent() {
     system("cls");
     showEvents();
     cout << "\nSelect Event ID: >";
-    cin >> id;
+    cin >> id;    
 
-    for (int i = 0; i < eventCount; i++) {
-        if (eventId[i] == id) {
-            cout << "Enter new Name: ";
-            cin.ignore(); // Clear the input buffer
-            getline(cin, eventName[i]);
-            cout << "Enter new Pax: ";
-            cin >> eventPax[i];
-            cout << "Event updated successfully!\n";
-
-            saveData(); // Save data after updating
-            adminEventList();
-            return;
-        }
-    }
-    cout << "Student with ID " << id << " not found.\n";
-
-    
+    cout << "Options..." << endl;
+    //do your thing
 }
 
 
