@@ -3,7 +3,7 @@
 #include <fstream> 
 #include <iomanip>
 #include <conio.h>
-
+#include <sstream>
 using namespace std;
 
 //Function initialization
@@ -23,7 +23,7 @@ void createEvent();
 void joinEvent();
 void editEvent();
 void deleteEvent();
-
+void viewAdvertisement();
 void printReceipt();
 void outputSucess();
 void saveToFile();
@@ -37,10 +37,9 @@ void eventReporting();
 
 //Constant variable declaration
 const string FILE_PATH = "data.txt"; // File path
-const int records = 100;         // Event Max Record 
+const int records = 100;             // Event Max Record 
 
-//Vairiable declaration
-int mode;
+//vatriable data that need to save
 int eventId[records];
 string eventName[records];
 string eventStartDate[records];
@@ -48,7 +47,7 @@ string eventEndDate[records];
 string eventPlace[records];
 int eventPax[records];
 
-int eventCount = 0;  // Current number of students
+int eventCount = 0;  // Current number of events
 int nextEventId = 1;   // Auto-increment ID counter
 
 //Main menu
@@ -98,35 +97,29 @@ void loadData() {
         return;
     }
 
-    eventCount = 0; // Reset the count
+    eventCount = 0;
     string line;
-    while (getline(inFile, line)) {
-        size_t pos1 = line.find(',');
-        size_t pos2 = line.find(',', pos1 + 1);
-        size_t pos3 = line.find(',', pos2 + 1);
-        size_t pos4 = line.find(',', pos3 + 1);
-        size_t pos5 = line.find(',', pos4 + 1);
+    while (getline(inFile, line) && eventCount < records) {
+        istringstream ss(line);
+        string token;
 
-        // Parse each variable from the line
-        eventId[eventCount] = stoi(line.substr(0, pos1));
-        eventName[eventCount] = line.substr(pos1 + 1, pos2 - pos1 - 1);
-        eventStartDate[eventCount] = line.substr(pos2 + 1, pos3 - pos2 - 1);
-        eventEndDate[eventCount] = line.substr(pos3 + 1, pos4 - pos3 - 1);
-        eventPlace[eventCount] = line.substr(pos4 + 1, pos5 - pos4 - 1);
-        eventPax[eventCount] = stoi(line.substr(pos5 + 1));
+        getline(ss, token, ',');
+        eventId[eventCount] = stoi(token);
+
+        getline(ss, eventName[eventCount], ',');
+        getline(ss, eventStartDate[eventCount], ',');
+        getline(ss, eventEndDate[eventCount], ',');
+        getline(ss, eventPlace[eventCount], ',');
+
+        getline(ss, token);
+        eventPax[eventCount] = stoi(token);
 
         eventCount++;
-        if (eventCount >= records) {
-            cout << "Error! Max record reached.\n";
-            break;
-        }
     }
 
-    // Update nextEventId to avoid overwriting IDs
     if (eventCount > 0) {
         nextEventId = eventId[eventCount - 1] + 1;
     }
-
     inFile.close();
 }
 
@@ -228,15 +221,15 @@ void showEventDetails()
             cout << "End Date: " << eventEndDate[i] << endl;
             cout << "Pax: " << eventPax[i] << endl;
            
-            cout << "\n| 1 Join Event | 2 Back | >";
+            cout << "\n| 1 Join Event | 2 View Advertisement | 3 Back to menu | >";
             cin >> choice;
 
             switch (choice) {
             case 1: joinEvent(); break;
             case 2: showEventDetails(); break;
-            default: cout << '\a'; guestEventList(); break;
+            case 3: viewAdvertisement(); break;
+            default: cout << '\a'; guestEventList();
             }
-
         }
     }
 }
@@ -260,8 +253,7 @@ void createEvent() {
 
     cout << '\a' << "Event added successfully! Press Enter to continue...";
 
-    cin.ignore(); 
-    cin.ignore(); //for some reason i have to add one more function to make it work
+    cin.ignore(2); 
 
     saveData(); // Save data after adding a student
     adminEventList();
@@ -278,8 +270,9 @@ void editEvent() {
     cout << "\nSelect Event ID: >";
     cin >> id;    
 
-    cout << "Options..." << endl;
     //do your thing
+    cout << "Options..." << endl;
+    
 }
 
 
