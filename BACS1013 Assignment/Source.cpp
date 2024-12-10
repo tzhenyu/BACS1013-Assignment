@@ -8,8 +8,8 @@ using namespace std;
 
 //Function initialization
 void welcomeScreen();
-void modeSelection(string text);
-void logIn(string text);
+void modeSelection();
+void logIn();
 
 void loadData();
 void saveData();
@@ -54,7 +54,7 @@ int nextEventId = 1;   // Auto-increment ID counter
 int main() {
     int mode;
 
-    system("cls");
+    system("cls"); //clear console screen
 
     cout << "are you ?" << endl;
     cout << "1 guest" << endl;
@@ -128,12 +128,12 @@ void welcomeScreen()
     
 }
 
-void modeSelection(string text)
+void modeSelection()
 {
 
 }
 
-void logIn(string text)
+void logIn()
 {
     string username, password;
 
@@ -182,7 +182,7 @@ void adminEventList() {int nextEventId = 1;   // Auto-increment ID counter
     switch (choice) {
     case 1: editEvent(); break;
     case 2: createEvent(); break;
-    case 3: modeSelection("Are you..?"); break;
+    case 3: modeSelection(); break;
     case 0: cout << "Bye!"; break;
     default: adminEventList();
     }
@@ -198,7 +198,7 @@ void guestEventList() {
 
     switch (choice) {
     case 1: showEventDetails(); break;
-    case 2: modeSelection("Are you..?"); break;
+    case 2: modeSelection(); break;
     case 0: cout << "Bye!"; break;
     default: guestEventList();
     }
@@ -226,8 +226,8 @@ void showEventDetails()
 
             switch (choice) {
             case 1: joinEvent(); break;
-            case 2: showEventDetails(); break;
-            case 3: viewAdvertisement(); break;
+            case 2: viewAdvertisement(); break;
+            case 3: guestEventList(); break;
             default: cout << '\a'; guestEventList();
             }
         }
@@ -277,6 +277,10 @@ void editEvent() {
 
 
 void deleteEvent()
+{
+}
+
+void viewAdvertisement()
 {
 }
 
