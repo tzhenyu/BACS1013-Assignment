@@ -54,7 +54,7 @@ int nextEventId = 1;   // Auto-increment ID counter
 int main() {
     int mode;
 
-    system("cls");
+    system("cls"); //clear console screen
 
     cout << "are you ?" << endl;
     cout << "1 guest" << endl;
