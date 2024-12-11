@@ -9,7 +9,6 @@ using namespace std;
 
 //Function initialization
 void setColor(int textColor, int bgColor);
-void centralizeWord(const string word);
 void welcomeScreen();
 void modeSelection();
 void logIn();
@@ -37,6 +36,8 @@ void eventMarketing();
 void eventPayment();
 void eventMonitoring();
 void eventReporting();
+void exitProgram();
+void changeCursorStyle(bool visible);
 
 //Constant variable declaration
 const string FILE_PATH = "data.txt"; // File path
@@ -52,12 +53,15 @@ int eventPax[records];
 
 int eventCount = 0;  // Current number of events
 int nextEventId = 1;   // Auto-increment ID counter
-
+int headerColor = 8; // menu color
 
 
 //Main menu
 int main() {
+    changeCursorStyle(false);
+
     modeSelection();
+    
 }
 
 
@@ -70,19 +74,6 @@ void setColor(int textColor, int bgColor)
         (bgColor << 4) | textColor);
 }
 
-
-void centralizeWord(const string word) {
-    const int consoleWidth = 77; // Width of the console
-    int padding = (consoleWidth - word.length()) / 2; // Calculate padding
-
-    // Ensure padding is non-negative
-    if (padding < 0) {
-        padding = 0;
-    }
-
-    // Output spaces for padding and then the word
-    cout << string(padding, ' ') << word << endl;
-}
 
 void saveData() {
     ofstream outFile(FILE_PATH);
@@ -147,10 +138,10 @@ void modeSelection()
     int mode;
 
     system("cls"); //clear console screen
-    cout << "\n\n\n\n\n\n\n\n" << endl;
-    centralizeWord("Are you?");
-    centralizeWord("[1] Guest");
-    centralizeWord("[2] Host");
+    cout << "\n\n\n\n\n\n\n\n\n" << endl;
+    cout << right << setw(43) << "Are you?" << endl;
+    cout << right << setw(44) << "[1]  Guest" << endl;
+    cout << right << setw(44) << "[2]   Host" << endl;
     mode = _getch() - '0';
 
     switch (mode) {
@@ -191,18 +182,24 @@ void showEvents() {
 
     for (int i = 0; i < 18; i++) {
 
-        //cout << " " << setw(3) << left << eventId[i]
-        //    << setw(38) << left << eventName[i]
-        //    << setw(16) << left << eventStartDate[i]
-        //    << setw(16) << left << eventEndDate[i]
-        //    << setw(6) << left << eventPax[i] << endl;
+        if (eventId[i] == 0) {
+            cout << "|" << setw(2) << left << " "
+                << "|" << setw(37) << left << " "
+                << "|" << setw(15) << left << " "
+                << "|" << setw(15) << left << " "
+                << "|" << setw(5) << left << " "
+                << "|" << endl;
+        }
+        else {
+            cout << "|" << setw(2) << left << eventId[i]
+                << "|" << setw(37) << left << eventName[i]
+                << "|" << setw(15) << left << eventStartDate[i]
+                << "|" << setw(15) << left << eventEndDate[i]
+                << "|" << setw(5) << left << eventPax[i]
+                << "|" << endl;
+        }
 
-        cout << "|" << setw(2) << left << eventId[i]
-            << "|" << setw(37) << left << eventName[i]
-            << "|" << setw(15) << left << eventStartDate[i]
-            << "|" << setw(15) << left << eventEndDate[i]
-            << "|" << setw(5) << left << eventPax[i] 
-            << "|" << endl;
+
 
 
 
@@ -218,7 +215,7 @@ void adminEventList() {
     setColor(8, 0);
     system("cls");
 
-    setColor(15, 1);
+    setColor(15, headerColor);
     cout << setw(44) << right << "Host Menu" << setw(36) << ' ' << endl;
     cout << setw(67) << right << "[1] Edit Event [2] Create Event [3] Back to Menu [0] Exit" << setw(13) << ' ' << endl;
     setColor(8, 0);
@@ -232,7 +229,7 @@ void adminEventList() {
     case 1: editEvent(); break;
     case 2: createEvent(); break;
     case 3: modeSelection(); break;
-    case 0: cout << "Bye!"; break;
+    case 0: exitProgram(); break;
     default: adminEventList();
     }
 }
@@ -241,7 +238,8 @@ void guestEventList() {
     int choice;
     setColor(8, 0);
     system("cls");
-    setColor(15, 1);
+
+    setColor(15, headerColor);
     cout << setw(45) << right << "Guest Menu" << setw(35) << ' ' << endl;
     cout << setw(63) << right << "[1] Show Concert Detail [2] Back To Menu [0] Exit" << setw(17) << ' ' << endl;
     setColor(8, 0);
@@ -254,7 +252,7 @@ void guestEventList() {
     switch (choice) {
     case 1: showEventDetails(); break;
     case 2: modeSelection(); break;
-    case 0: cout << "Bye!"; break;
+    case 0: exitProgram(); break;
     default: guestEventList();
     }
 }
@@ -264,7 +262,8 @@ void showEventDetails()
     int id, choice;
     setColor(8, 0);
     system("cls");
-    setColor(15, 1);
+
+    setColor(15, headerColor);
     cout << setw(80) << ' ' << endl;
     cout << right << setw(55) << "Select Concert ID (0 to cancel)" << setw(25) << ' ';
 
@@ -280,8 +279,9 @@ void showEventDetails()
         system("cls");
         for (int i = 0; i < eventCount; i++) {
             if (eventId[i] == id) {
-                setColor(15, 1);
-                cout << setw(80) << left << "[1] Join Event [2] View Advertisement [3] Back to menu" << "\n\n";
+                setColor(15, headerColor);
+                cout << setw(80) << ' ' << endl;
+                cout << right << setw(68) << "[1] Participate [2] View Advertisement [3] Back to menu" << setw(12) << " " << "\n\n";
                 setColor(8, 0);
 
                 cout << setw(15) << left << "Name: " << eventName[i] << endl;
@@ -343,18 +343,25 @@ void editEvent() {
     setColor(8, 0);
     system("cls");
 
-    setColor(15, 1);
-    cout << setw(80) << left << "Select Concert ID (0 to cancel)" << "\n\n";
+    setColor(15, headerColor);
+    cout << setw(80) << ' ' << endl;
+    cout << right << setw(55) << "Select Concert ID (0 to cancel)" << setw(25) << ' ';
     setColor(8, 0);
 
     showEvents();
 
-    
+    id = _getch() - '0';
+    if (id == 0) {
+        cout << "huh" << endl;
+        guestEventList();
+    }
+    else {
+        //do your thing
+        system("cls");
+        cout << "Options..." << endl;
+    }
 
-    id = _getch() + '0';
 
-    //do your thing
-    cout << "Options..." << endl;
     
 }
 
@@ -401,4 +408,39 @@ void eventMonitoring()
 
 void eventReporting()
 {
+}
+
+void exitProgram()
+{
+    system("cls");
+
+    cout << "\n\n\n\n\n\n";
+    cout << "                               ____              _ " << endl;
+    cout << "                              (  _ \\            ( )" << endl;
+    cout << "                              | (_) )_   _   __ | | " << endl;
+    cout << "                              |  _ (( ) ( )/ __ \\ |" << endl;
+    cout << "                              | (_) ) (_) |  ___/_) " << endl;
+    cout << "                              (____/ \\__  |\\____) " << endl;
+    cout << "                                    ( )_| |     (_) " << endl;
+    cout << "                                     \\___/         " << endl;
+    cout << "\n                          Press Anything to Continue..." << endl;
+
+
+    setColor(0,0);
+
+}
+
+void changeCursorStyle(bool visible) {
+    // Obtain handle to the console output
+    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+
+    // Create a cursor info structure
+    CONSOLE_CURSOR_INFO cursorInfo;
+
+    // Set cursor visibility and size
+    cursorInfo.bVisible = visible;  // Visibility: true or false
+    cursorInfo.dwSize = 100;
+
+    // Apply the settings
+    SetConsoleCursorInfo(hConsole, &cursorInfo);
 }
