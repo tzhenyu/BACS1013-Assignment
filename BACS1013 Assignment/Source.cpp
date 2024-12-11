@@ -1,9 +1,10 @@
-#include <iostream>
+﻿#include <iostream>
 #include <string>
 #include <fstream> 
 #include <iomanip>
 #include <conio.h>
 #include <sstream>
+#include <windows.h> 
 using namespace std;
 
 //Function initialization
@@ -50,22 +51,28 @@ int eventPax[records];
 int eventCount = 0;  // Current number of events
 int nextEventId = 1;   // Auto-increment ID counter
 
+void centralizeWord(const string word) {
+    const int consoleWidth = 81; // Width of the console
+    int padding = (consoleWidth - word.length()) / 2; // Calculate padding
+
+    // Ensure padding is non-negative
+    if (padding < 0) {
+        padding = 0;
+    }
+
+    // Output spaces for padding and then the word
+    cout << string(padding, ' ') << word << endl;
+}
+
 //Main menu
 int main() {
-    int mode;
+    system("Color 80");
+    //cout << '+' << setw(78) << setfill('-') << '-' << '+' << endl;
+    //cout << '|' << setw(79) << setfill(' ') << '|' << endl;
 
-    system("cls"); //clear console screen
 
-    cout << "are you ?" << endl;
-    cout << "1 guest" << endl;
-    cout << "2 host" << endl;
-    cin >> mode; 
 
-    switch (mode) {
-    case 1: guestEventList(); break;
-    case 2: adminEventList(); break;
-    default: cout << '\a'; main(); break;
-    }
+    modeSelection();
 
 }
 
@@ -130,7 +137,20 @@ void welcomeScreen()
 
 void modeSelection()
 {
+    int mode;
 
+    system("cls"); //clear console screen
+    cout << "\n\n" << endl;
+    centralizeWord("Are you?");
+    centralizeWord("[1] Guest");
+    centralizeWord("[2] Host");
+    mode = _getch();
+
+    switch (mode) {
+    case '1': guestEventList(); break;
+    case '2': adminEventList(); break;
+    default: cout << '\a'; main(); break;
+    }
 }
 
 void logIn()
