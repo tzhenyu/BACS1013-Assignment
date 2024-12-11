@@ -8,6 +8,8 @@
 using namespace std;
 
 //Function initialization
+void setColor(int textColor, int bgColor);
+void centralizeWord(const string word);
 void welcomeScreen();
 void modeSelection();
 void logIn();
@@ -51,15 +53,26 @@ int eventPax[records];
 int eventCount = 0;  // Current number of events
 int nextEventId = 1;   // Auto-increment ID counter
 
-void SetColor(int textColor, int bgColor)
+
+
+//Main menu
+int main() {
+    modeSelection();
+}
+
+
+//Other functions
+
+void setColor(int textColor, int bgColor)
 {
     HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
     SetConsoleTextAttribute(hConsole,
         (bgColor << 4) | textColor);
 }
 
+
 void centralizeWord(const string word) {
-    const int consoleWidth = 81; // Width of the console
+    const int consoleWidth = 77; // Width of the console
     int padding = (consoleWidth - word.length()) / 2; // Calculate padding
 
     // Ensure padding is non-negative
@@ -70,20 +83,6 @@ void centralizeWord(const string word) {
     // Output spaces for padding and then the word
     cout << string(padding, ' ') << word << endl;
 }
-
-//Main menu
-int main() {
-    //cout << '+' << setw(78) << setfill('-') << '-' << '+' << endl;
-    //cout << '|' << setw(79) << setfill(' ') << '|' << endl;
-
-
-
-    modeSelection();
-
-}
-
-
-//Other functions
 
 void saveData() {
     ofstream outFile(FILE_PATH);
@@ -143,20 +142,20 @@ void welcomeScreen()
 
 void modeSelection()
 {
-    SetColor(8, 0);
+    setColor(8, 0);
 
     int mode;
 
     system("cls"); //clear console screen
-    cout << "\n\n" << endl;
+    cout << "\n\n\n\n\n\n\n\n" << endl;
     centralizeWord("Are you?");
     centralizeWord("[1] Guest");
     centralizeWord("[2] Host");
-    mode = _getch();
+    mode = _getch() - '0';
 
     switch (mode) {
-    case '1': guestEventList(); break;
-    case '2': adminEventList(); break;
+    case 1: guestEventList(); break;
+    case 2: adminEventList(); break;
     default: cout << '\a'; main(); break;
     }
 }
@@ -170,19 +169,18 @@ void logIn()
 
 
 void showEvents() {
-    
     loadData();
 
-    cout << left; //make event list left justified
-    cout << setw(80) << setfill('-') << '-' << endl;
-    cout << setfill(' ');
 
+    //cout << setw(80) <<  << '-';
+    cout << "+--+-------------------------------------+---------------+---------------+-----+";
+    cout << left << setfill(' ');
     cout << setw(3) << left << "|ID" << right << "|"
-        << setw(37) << left << "Name" << right << "|"
+        << setw(37) << left << "Title" << right << "|"
         << setw(15) << left << "Start Date" << right << "|"
         << setw(15) << left << "End Date" << right << "|"
         << setw(5) << left << "Pax" << right << "|" << endl;
-    cout << setw(80) << setfill('-') << '-' << endl;
+    cout << "+--+-------------------------------------+---------------+---------------+-----+";
 
     cout << setfill(' ');
 
@@ -191,52 +189,72 @@ void showEvents() {
         return;
     }
 
-    for (int i = 0; i < eventCount; i++) {
+    for (int i = 0; i < 18; i++) {
 
-        cout << " " << setw(3) << left << eventId[i]
-            << setw(38) << left << eventName[i]
-            << setw(16) << left << eventStartDate[i]
-            << setw(16) << left << eventEndDate[i]
-            << setw(6) << left << eventPax[i] << endl;
+        //cout << " " << setw(3) << left << eventId[i]
+        //    << setw(38) << left << eventName[i]
+        //    << setw(16) << left << eventStartDate[i]
+        //    << setw(16) << left << eventEndDate[i]
+        //    << setw(6) << left << eventPax[i] << endl;
+
+        cout << "|" << setw(2) << left << eventId[i]
+            << "|" << setw(37) << left << eventName[i]
+            << "|" << setw(15) << left << eventStartDate[i]
+            << "|" << setw(15) << left << eventEndDate[i]
+            << "|" << setw(5) << left << eventPax[i] 
+            << "|" << endl;
+
+
 
     }
+    cout << "+--+-------------------------------------+---------------+---------------+-----+" << endl;
+
 }
 
 
-void adminEventList() {int nextEventId = 1;   // Auto-increment ID counter
+void adminEventList() {
+    int nextEventId = 1;   // Auto-increment ID counter
+    int choice;
+    setColor(8, 0);
     system("cls");
-    cout << "You are: Host\n";
+
+    setColor(15, 1);
+    cout << setw(44) << right << "Host Menu" << setw(36) << ' ' << endl;
+    cout << setw(67) << right << "[1] Edit Event [2] Create Event [3] Back to Menu [0] Exit" << setw(13) << ' ' << endl;
+    setColor(8, 0);
+
     showEvents();
 
-    int choice;
-    SetColor(15, 1);
-    cout << "\n| 1 Edit Event | 2 Create Event | 3 Back to Menu | 0 Exit |";
-    choice = _getch();
+    choice = _getch() - '0';
 
 
     switch (choice) {
-    case '1': editEvent(); break;
-    case '2': createEvent(); break;
-    case '3': modeSelection(); break;
-    case '0': cout << "Bye!"; break;
+    case 1: editEvent(); break;
+    case 2: createEvent(); break;
+    case 3: modeSelection(); break;
+    case 0: cout << "Bye!"; break;
     default: adminEventList();
     }
 }
 
 void guestEventList() {
     int choice;
+    setColor(8, 0);
     system("cls");
-    cout << "Hi, Guest!\n";
-    showEvents();
-    SetColor(15, 1);
-    cout << "\n| 1 Event Details | 2 Back To Menu | 0 Exit |";
-    choice = _getch();
+    setColor(15, 1);
+    cout << setw(45) << right << "Guest Menu" << setw(35) << ' ' << endl;
+    cout << setw(63) << right << "[1] Show Concert Detail [2] Back To Menu [0] Exit" << setw(17) << ' ' << endl;
+    setColor(8, 0);
 
+    showEvents();
+
+
+    choice = _getch() - '0';
 
     switch (choice) {
-    case '1': showEventDetails(); break;
-    case '2': modeSelection(); break;
-    case '0': cout << "Bye!"; break;
+    case 1: showEventDetails(); break;
+    case 2: modeSelection(); break;
+    case 0: cout << "Bye!"; break;
     default: guestEventList();
     }
 }
@@ -244,34 +262,54 @@ void guestEventList() {
 void showEventDetails()
 {
     int id, choice;
+    setColor(8, 0);
     system("cls");
+    setColor(15, 1);
+    cout << setw(80) << ' ' << endl;
+    cout << right << setw(55) << "Select Concert ID (0 to cancel)" << setw(25) << ' ';
+
+    setColor(8, 0);
+
     showEvents();
-    cout << "\nSelect Event ID: >";
-    cin >> id;
+    id = _getch() - '0';
+    if (id == 0) {
+        cout << "huh" << endl;
+        guestEventList();
+    }
+    else {
+        system("cls");
+        for (int i = 0; i < eventCount; i++) {
+            if (eventId[i] == id) {
+                setColor(15, 1);
+                cout << setw(80) << left << "[1] Join Event [2] View Advertisement [3] Back to menu" << "\n\n";
+                setColor(8, 0);
 
-    system("cls");
-    for (int i = 0; i < eventCount; i++) {
-        if (eventId[i] == id) {
+                cout << setw(15) << left << "Name: " << eventName[i] << endl;
+                cout << setw(15) << left << "Start Date: " << eventStartDate[i] << endl;
+                cout << setw(15) << left << "End Date: " << eventEndDate[i] << endl;
+                cout << setw(15) << left << "Pax: " << eventPax[i] << endl;
 
-            cout << "Name: " << eventName[i] << endl;
-            cout << "Start Date: " << eventStartDate[i] << endl;
-            cout << "End Date: " << eventEndDate[i] << endl;
-            cout << "Pax: " << eventPax[i] << endl;
-           
-            cout << "\n| 1 Join Event | 2 View Advertisement | 3 Back to menu | >";
-            cin >> choice;
+                choice = _getch() - '0';
 
-            switch (choice) {
-            case 1: joinEvent(); break;
-            case 2: viewAdvertisement(); break;
-            case 3: guestEventList(); break;
-            default: cout << '\a'; guestEventList();
+
+                switch (choice) {
+                case 1: joinEvent(); break;
+                case 2: viewAdvertisement(); break;
+                case 3: guestEventList(); break;
+                default: cout << '\a'; guestEventList();
+                }
             }
         }
+
     }
+
+
 }
 
+
+
 void createEvent() {
+    setColor(8, 0);
     system("cls");
     if (eventCount >= records) {
         cout << "Cannot add event! Reached maximum storage!\n";
@@ -302,10 +340,18 @@ void joinEvent()
 
 void editEvent() {
     int id;
+    setColor(8, 0);
     system("cls");
+
+    setColor(15, 1);
+    cout << setw(80) << left << "Select Concert ID (0 to cancel)" << "\n\n";
+    setColor(8, 0);
+
     showEvents();
-    cout << "\nSelect Event ID: >";
-    cin >> id;    
+
+    
+
+    id = _getch() + '0';
 
     //do your thing
     cout << "Options..." << endl;
