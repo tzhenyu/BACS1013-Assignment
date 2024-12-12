@@ -55,18 +55,30 @@ int eventCount = 0;  // Current number of events
 int nextEventId = 1;   // Auto-increment ID counter
 int headerColor = 8; // menu color
 
+//box character for aesthetic purpose
+
+int topRightCorner = 191;
+int topLeftCorner = 218; 
+int btmRightCorner = 217;
+int btmLeftCorder = 192;
+int topInter = 194;
+int btmInter = 193;
+int leftInter = 195;
+int rightInter = 180;
+int centerInter = 197;
+int horizon = 196;
+int vert = 179;
 
 //Main menu
 int main() {
-    changeCursorStyle(false);
-
+    SetConsoleCP(437);        //able to display character box
+    SetConsoleOutputCP(437);  //able to display character box
+    changeCursorStyle(false); //make text cursor disappear
     modeSelection();
-    
 }
 
 
 //Other functions
-
 void setColor(int textColor, int bgColor)
 {
     HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -100,7 +112,7 @@ void loadData() {
         return;
     }
 
-    eventCount = 0;
+    eventCount = 1;
     string line;
     while (getline(inFile, line) && eventCount < records) {
         istringstream ss(line);
@@ -162,16 +174,18 @@ void logIn()
 void showEvents() {
     loadData();
 
+    cout << right << setfill((char)horizon) << (char)topLeftCorner << setw(3) << (char)topInter << setw(38) << (char)topInter << setw(16) << (char)topInter << setw(16) << (char)topInter << setw(6) << (char)topRightCorner;
 
-    //cout << setw(80) <<  << '-';
-    cout << "+--+-------------------------------------+---------------+---------------+-----+";
     cout << left << setfill(' ');
-    cout << setw(3) << left << "|ID" << right << "|"
-        << setw(37) << left << "Title" << right << "|"
-        << setw(15) << left << "Start Date" << right << "|"
-        << setw(15) << left << "End Date" << right << "|"
-        << setw(5) << left << "Pax" << right << "|" << endl;
-    cout << "+--+-------------------------------------+---------------+---------------+-----+";
+    cout << (char)vert
+        << setw(2) << left << "ID" << right << (char)vert
+        << setw(37) << left << "Title" << right << (char)vert
+        << setw(15) << left << "Start Date" << right << (char)vert
+        << setw(15) << left << "End Date" << right << (char)vert
+        << setw(5) << left << "Pax" << right << (char)vert << endl;
+
+    cout << right << setfill((char)horizon) << (char)leftInter << setw(3) << (char)centerInter << setw(38) << (char)centerInter << setw(16) << (char)centerInter << setw(16) << (char)centerInter << setw(6) << (char)rightInter;
+
 
     cout << setfill(' ');
 
@@ -180,23 +194,22 @@ void showEvents() {
         return;
     }
 
-    for (int i = 0; i < 18; i++) {
-
+    for (int i = 1; i < 19; i++) {
         if (eventId[i] == 0) {
-            cout << "|" << setw(2) << left << " "
-                << "|" << setw(37) << left << " "
-                << "|" << setw(15) << left << " "
-                << "|" << setw(15) << left << " "
-                << "|" << setw(5) << left << " "
-                << "|" << endl;
+            cout << (char)vert << setw(2) << left << " "
+                << (char)vert<< setw(37) << left << " "
+                << (char)vert<< setw(15) << left << " "
+                << (char)vert<< setw(15) << left << " "
+                << (char)vert<< setw(5) << left << " "
+                << (char)vert<< endl;
         }
         else {
-            cout << "|" << setw(2) << left << eventId[i]
-                << "|" << setw(37) << left << eventName[i]
-                << "|" << setw(15) << left << eventStartDate[i]
-                << "|" << setw(15) << left << eventEndDate[i]
-                << "|" << setw(5) << left << eventPax[i]
-                << "|" << endl;
+            cout << (char)vert << setw(2) << left << eventId[i]
+                << (char)vert << setw(37) << left << eventName[i]
+                << (char)vert << setw(15) << left << eventStartDate[i]
+                << (char)vert << setw(15) << left << eventEndDate[i]
+                << (char)vert << setw(5) << left << eventPax[i]
+                << (char)vert << endl;
         }
 
 
@@ -204,8 +217,8 @@ void showEvents() {
 
 
     }
-    cout << "+--+-------------------------------------+---------------+---------------+-----+" << endl;
-
+    cout << right << setfill((char)horizon) << (char)btmLeftCorder << setw(3) << (char)btmInter << setw(38) << (char)btmInter << setw(16) << (char)btmInter << setw(16) << (char)btmInter << setw(6) << (char)btmRightCorner;
+    cout << setfill(' ');
 }
 
 
@@ -268,43 +281,44 @@ void showEventDetails()
     cout << right << setw(55) << "Select Concert ID (0 to cancel)" << setw(25) << ' ';
 
     setColor(8, 0);
-
     showEvents();
+
     id = _getch() - '0';
+
     if (id == 0) {
-        cout << "huh" << endl;
         guestEventList();
     }
-    else {
+
+    if (id  < 1 || id >= eventCount) {
         system("cls");
-        for (int i = 0; i < eventCount; i++) {
-            if (eventId[i] == id) {
-                setColor(15, headerColor);
-                cout << setw(80) << ' ' << endl;
-                cout << right << setw(68) << "[1] Participate [2] View Advertisement [3] Back to menu" << setw(12) << " " << "\n\n";
-                setColor(8, 0);
-
-                cout << setw(15) << left << "Name: " << eventName[i] << endl;
-                cout << setw(15) << left << "Start Date: " << eventStartDate[i] << endl;
-                cout << setw(15) << left << "End Date: " << eventEndDate[i] << endl;
-                cout << setw(15) << left << "Pax: " << eventPax[i] << endl;
-
-                choice = _getch() - '0';
-
-
-                switch (choice) {
-                case 1: joinEvent(); break;
-                case 2: viewAdvertisement(); break;
-                case 3: guestEventList(); break;
-                default: cout << '\a'; guestEventList();
-                }
-            }
-        }
+        cout << "\a" << "Invalid ID!" << endl;
+        cout << "Press Anything to continue..." << endl;
+        _getch();
+        showEventDetails();
 
     }
+    system("cls");
+    setColor(15, headerColor);
+    cout << setw(80) << ' ' << endl;
+    cout << right << setw(68) << "[1] Participate [2] View Advertisement [3] Back to menu" << setw(12) << " " << "\n\n";
+    setColor(8, 0);
 
+    cout << setw(15) << left << "Name: " << eventName[id] << endl;
+    cout << setw(15) << left << "Start Date: " << eventStartDate[id] << endl;
+    cout << setw(15) << left << "End Date: " << eventEndDate[id] << endl;
+    cout << setw(15) << left << "Pax: " << eventPax[id] << endl;
 
+    choice = _getch() - '0';
+
+    switch (choice) {
+    case 1: joinEvent(); break;
+    case 2: viewAdvertisement(); break;
+    case 3: guestEventList(); break;
+    default: cout << '\a'; guestEventList();
+    }
 }
+
+
 
 
 
