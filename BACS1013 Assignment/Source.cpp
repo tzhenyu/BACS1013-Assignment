@@ -27,7 +27,6 @@ void createEvent();
 void joinEvent();
 void editEvent();
 void deleteEvent();
-void viewAdvertisement();
 void printReceipt();
 void outputSucess();
 void saveToFile();
@@ -47,7 +46,7 @@ void hostEventManagement();
 bool advertisementExists(size_t num);
 void deleteAdvertisement(size_t num);
 void editAdvertisement(size_t num, const string& newTitle, const string& newDescription, const string& newPax, const string& newFee);
-void viewAdvertisements();
+void viewAdvertisement();
 void addAdvertisement(const string& title, const string& description, const string& pax, const string& fee);
 struct Advertisement;
 //void eventAdvertisingMenu();
@@ -402,9 +401,6 @@ void deleteEvent()
 {
 }
 
-void viewAdvertisement()
-{
-}
 
 void printReceipt()
 {
@@ -500,10 +496,10 @@ vector<Advertisement> advertisements;
 void addAdvertisement(const string& title, const string& description, const string& pax, const string& fee) {
     advertisements.emplace_back(title, description, pax, fee);
     cout << "\a" << "Advertisement added successfully!" << endl;
-    cin.ignore(2);
+    cin.ignore();
 }
 
-void viewAdvertisements() {
+void viewAdvertisement() {
     system("clear");
 
     if (advertisements.empty()) {
@@ -515,7 +511,7 @@ void viewAdvertisements() {
         for (size_t i = 0; i < advertisements.size(); ++i) {
             cout << "\nAdvertisement " << i + 1 << ":" << endl;
             advertisements[i].display();
-        }
+        } cin.ignore();
     }
 }
 
@@ -588,7 +584,7 @@ void hostEventManagement() {
             break;
         }
         case 2:
-            viewAdvertisements();
+            viewAdvertisement();
             break;
 
         case 3: {
