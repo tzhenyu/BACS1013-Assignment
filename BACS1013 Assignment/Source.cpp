@@ -5,6 +5,8 @@
 #include <conio.h>
 #include <sstream>
 #include <windows.h> 
+#include <vector>
+
 using namespace std;
 
 //Function initialization
@@ -38,6 +40,17 @@ void eventMonitoring();
 void eventReporting();
 void exitProgram();
 void changeCursorStyle(bool visible);
+
+//zhengyuan function
+void hostEventManagement();
+//void guestEventManagement();
+bool advertisementExists(size_t num);
+void deleteAdvertisement(size_t num);
+void editAdvertisement(size_t num, const string& newTitle, const string& newDescription, const string& newPax, const string& newFee);
+void viewAdvertisements();
+void addAdvertisement(const string& title, const string& description, const string& pax, const string& fee);
+struct Advertisement;
+//void eventAdvertisingMenu();
 
 //Constant variable declaration
 const string FILE_PATH = "data.txt"; // File path
@@ -312,7 +325,7 @@ void showEventDetails()
 
     switch (choice) {
     case 1: joinEvent(); break;
-    case 2: viewAdvertisement(); break;
+    //case 2: guestEventManagement(); break;
     case 3: guestEventList(); break;
     default: cout << '\a'; guestEventList();
     }
@@ -370,13 +383,18 @@ void editEvent() {
         guestEventList();
     }
     else {
-        //do your thing
-        system("cls");
-        cout << "Options..." << endl;
+        system("clear");
+        cout << "[1] Event Advertisement" << endl;
+        cout << "[2] Event " << endl;
+        cout << "[3] Event " << endl;
+        cout << "[4] Event " << endl;
+        cout << "[5] Event " << endl;
+        id = _getch() - '0';
+
+        switch (id) {
+        case 1: hostEventManagement();
+        }
     }
-
-
-    
 }
 
 
@@ -458,3 +476,203 @@ void changeCursorStyle(bool visible) {
     // Apply the settings
     SetConsoleCursorInfo(hConsole, &cursorInfo);
 }
+
+//ZHENGYUAN PART 
+struct Advertisement {
+    string title, description, pax, fee;
+
+    Advertisement(string t, string d, string p, string f)
+        : title(t), description(d), pax(p), fee(f) {
+    }
+
+    void display() const {
+        system("clear");
+
+        cout << "Title: " << title << endl;
+        cout << "Description: " << description << endl;
+        cout << "Pax: " << pax << endl;
+        cout << "Fee: " << fee << endl;
+    }
+};
+
+vector<Advertisement> advertisements;
+
+void addAdvertisement(const string& title, const string& description, const string& pax, const string& fee) {
+    advertisements.emplace_back(title, description, pax, fee);
+    cout << "\a" << "Advertisement added successfully!" << endl;
+    cin.ignore(2);
+}
+
+void viewAdvertisements() {
+    system("clear");
+
+    if (advertisements.empty()) {
+        cout << "\a";
+        cout << "No advertisements available! Check back later." << endl;
+        cin.ignore();
+    }
+    else {
+        for (size_t i = 0; i < advertisements.size(); ++i) {
+            cout << "\nAdvertisement " << i + 1 << ":" << endl;
+            advertisements[i].display();
+        }
+    }
+}
+
+void editAdvertisement(size_t num, const string& newTitle, const string& newDescription, const string& newPax, const string& newFee) {
+    system("clear");
+
+    if (num < advertisements.size()) {
+        advertisements[num].title = newTitle;
+        advertisements[num].description = newDescription;
+        advertisements[num].pax = newPax;
+        advertisements[num].fee = newFee;
+        cout << "Advertisement updated successfully!" << endl;
+    }
+    else {
+        cout << "Invalid advertisement number! Please try again." << endl;
+    }
+}
+
+void deleteAdvertisement(size_t num) {
+    system("clear");
+
+    if (num < advertisements.size()) {
+        advertisements.erase(advertisements.begin() + num);
+        cout << "Advertisement deleted successfully!" << endl;
+    }
+    else {
+        cout << "Invalid advertisement number! Please try again." << endl;
+    }
+}
+
+bool advertisementExists(size_t num) {
+    return num < advertisements.size();
+}
+
+void eventManagementDisplay() {
+    system("clear");
+
+    cout << "\n------- Advertisement Menu -------\n";
+    cout << "1. Add Advertisement\n";
+    cout << "2. View Advertisement\n";
+    cout << "3. Edit Advertisement\n";
+    cout << "4. Delete Advertisement\n";
+    cout << "5. Return to Main Menu\n";
+    cout << "Enter your option: ";
+
+}
+
+void hostEventManagement() {
+    int choice;
+    system("clear");
+    do {
+        eventManagementDisplay();
+        cin >> choice;
+        cin.ignore();
+
+        switch (choice) {
+        case 1: {
+            string title, description, pax, fee;
+
+            cout << "Enter the title: ";
+            getline(cin, title);
+            cout << "Enter the description: ";
+            getline(cin, description);
+            cout << "Number of pax: ";
+            getline(cin, pax);
+            cout << "Amount of fee: ";
+            getline(cin, fee);
+
+            addAdvertisement(title, description, pax, fee);
+            break;
+        }
+        case 2:
+            viewAdvertisements();
+            break;
+
+        case 3: {
+            size_t num;
+            cout << "Enter advertisement number to edit: ";
+            cin >> num;
+            cin.ignore();
+
+            if (advertisementExists(num - 1)) {
+                string newTitle, newDescription, newPax, newFee;
+                cout << "Enter new title: ";
+                getline(cin, newTitle);
+                cout << "Enter new description: ";
+                getline(cin, newDescription);
+                cout << "Enter new number of pax: ";
+                getline(cin, newPax);
+                cout << "Enter new amount of fee: ";
+                getline(cin, newFee);
+
+                editAdvertisement(num - 1, newTitle, newDescription, newPax, newFee);
+            }
+            else {
+                cout << "Advertisement does not exist! Please try again." << endl;
+            }
+            break;
+        }
+
+        case 4: {
+            size_t num;
+            cout << "Enter advertisement number to delete: ";
+            cin >> num;
+
+            if (advertisementExists(num - 1)) {
+                deleteAdvertisement(num - 1);
+            }
+            else {
+                cout << "Advertisement does not exist! Please try again." << endl;
+            }
+            break;
+        }
+
+        case 5:
+            cout << "Returning to Main Menu...\n";
+            break;
+
+        default:
+            cout << "Invalid option! Please try again." << endl;
+        }
+    } while (choice != 5);
+}
+
+//NOT GONNA USE IT 
+//BECAUSE ALREADY HAVE HOST AND GUEST SELECTION BEFORE THIS
+
+//void eventAdvertisingMenu() {
+//
+//    int choice;
+//
+//    do {
+//        system("clear");
+//
+//        cout << "\nMain Menu\n";
+//        cout << "1. Host\n";
+//        cout << "2. Guest\n";
+//        cout << "3. Exit Program\n"; 
+//        cout << "Enter your option: ";
+//        cin >> choice;
+//
+//        switch (choice) {
+//        case 1:
+//            hostEventManagement();
+//            break;
+//
+//        case 2:
+//            cout << "GUEST VIEW" << endl;
+//            viewAdvertisements();
+//            break;
+//
+//        case 3:
+//            cout << "Exiting Program. Goodbye!" << endl;
+//            break;
+//
+//        default:
+//            cout << "Invalid choice! Please try again." << endl;
+//        }
+//    } while (choice != 3);
+//}
