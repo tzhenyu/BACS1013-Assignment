@@ -331,9 +331,6 @@ void showEventDetails()
 }
 
 
-
-
-
 void createEvent() {
     setColor(8, 0);
     system("cls");
@@ -360,9 +357,54 @@ void createEvent() {
     adminEventList();
 }
 
-void joinEvent()
-{
+struct EventRegistration {
+    string name;
+    string email;
+    int eventId;
+    EventRegistration(string n, string e, int id) : name(n), email(e), eventId(id) {}
+};
+
+vector<EventRegistration> registrations;  // Vector to store registrations
+
+void joinEvent() {
+    int eventId;
+    string name, email;
+
+    system("cls");  
+    cout << "----- Join Event Form -----\n\n";
+
+    cout << "Enter your name: ";
+    getline(cin, name);
+
+    cout << "Enter your email: ";
+    getline(cin, email);
+
+    cout << "\nEnter the Event ID you want to join: ";
+    cin >> eventId;
+    cin.ignore();
+
+    cout << "\nYou are about to join Event ID " << eventId << ".\n";
+    cout << "Name: " << name << "\n";
+    cout << "Email: " << email << "\n";
+
+    char confirm;
+    cout << "Do you want to confirm your registration? (Y/N): ";
+    cin >> confirm;
+    cin.ignore();
+
+    if (confirm == 'Y' || confirm == 'y') {
+        // Save the registration details to the vector
+        registrations.push_back(EventRegistration(name, email, eventId));
+        cout << "\nYou have successfully joined the event!\n";
+    }
+    else {
+        cout << "\nRegistration canceled.\n";
+    }
+
+    cout << "\nPress any key to return to the event list...";
+    cin.get();
 }
+
 
 void editEvent() {
     int id;
@@ -397,21 +439,135 @@ void editEvent() {
 }
 
 
-void deleteEvent()
-{
-}
+void deleteEvent(){ 
+    int eventIdToDelete;
+    setColor(8, 0);
+    system("cls");
 
+    setColor(15, headerColor);
+    cout << setw(80) << ' ' << endl;
+    cout << right << setw(55) << "Enter Event ID to delete (0 to cancel)" << setw(25) << ' ';
 
-void printReceipt()
-{
-}
+    setColor(8, 0);
+    showEvents(); 
+
+    eventIdToDelete = _getch() - '0'; // Assuming ID is a single digit for simplicity
+
+    if (eventIdToDelete == 0) {
+        guestEventList();  
+        return;
+    }
+
+    // Validate if the event ID exists
+    bool found = false;
+    for (int i = 1; i < eventCount; ++i) {
+        if (eventId[i] == eventIdToDelete) {
+            found = true;
+            // Shift events after the deleted event
+            for (int j = i; j < eventCount - 1; ++j) {
+                eventId[j] = eventId[j + 1];
+                eventName[j] = eventName[j + 1];
+                eventStartDate[j] = eventStartDate[j + 1];
+                eventEndDate[j] = eventEndDate[j + 1];
+                eventPlace[j] = eventPlace[j + 1];
+                eventPax[j] = eventPax[j + 1];
+            }
+
+            eventCount--;  // Decrease event count
+            cout << "Event deleted successfully!" << endl;
+            saveData();  
+            break;
+        }
+    }
+
+    if (!found) {
+        cout << "\aInvalid Event ID! No event found with the given ID." << endl;
+    }
+
+    cout << "Press any key to return to event list..." << endl;
+    _getch();
+    adminEventList();
+    }
+
+void printReceipt() {
+    int eventIdSelected;
+    setColor(8, 0);
+    system("cls");
+
+    setColor(15, headerColor);
+    cout << setw(80) << ' ' << endl;
+    cout << right << setw(55) << "Select Event ID for Receipt (0 to cancel)" << setw(25) << ' ';
+    setColor(8, 0);
+
+    showEvents();  // Show event list to select from
+
+    eventIdSelected = _getch() - '0';
+
+    if (eventIdSelected == 0) {
+        adminEventList();  
+        return;
+    }
+
+    if (eventIdSelected < 1 || eventIdSelected >= eventCount) {
+        system("cls");
+        cout << "\a" << "Invalid Event ID!" << endl;
+        cout << "Press any key to continue..." << endl;
+        _getch();
+        printReceipt(); 
+    }
+
+    system("cls");
+    setColor(15, headerColor);
+    cout << setw(80) << ' ' << endl;
+    cout << right << setw(50) << "Event Receipt" << setw(30) << ' ' << endl;
+    setColor(8, 0);
+
+    system("cls"); 
+    setColor(15, 0);
+    cout << "----------------------------------------\n";
+    cout << "              Event Receipt             \n";
+    cout << "----------------------------------------\n";
+    cout << "\nEvent Name: " << eventName[eventIdSelected] << endl;
+    cout << "Start Date: " << eventStartDate[eventIdSelected] << endl;
+    cout << "End Date: " << eventEndDate[eventIdSelected] << endl;
+    cout << "Location: " << eventPlace[eventIdSelected] << endl;
+    cout << "Number of Participants: " << eventPax[eventIdSelected] << endl;
+    cout << "\nThank you for registering!" << endl;
+    cout << "----------------------------------------\n";
+    cout << "Thank you for joining the event!\n";
+    cout << "----------------------------------------\n";
+
+    cout << "\nPress any key to return to the event list...";
+    _getch();
+    adminEventList();
+  }
+
+ 
 
 void outputSucess()
-{
+{   cout << "\a" << "Operation completed successfully!" << endl;
+    cout << "Press Enter to continue..." << endl;
+    cin.ignore(2);
 }
 
 void saveToFile()
-{
+{   ofstream outFile(FILE_PATH);
+    if (!outFile) {
+        cout << "Error saving data to file." << endl;
+        return;
+    }
+
+    for (int i = 0; i < eventCount; i++) {
+        outFile << eventId[i] << ","
+            << eventName[i] << ","
+            << eventStartDate[i] << ","
+            << eventEndDate[i] << ","
+            << eventPlace[i] << ","
+            << eventPax[i] << "\n";
+    }
+
+    outFile.close();
+    cout << "\a" << "Data saved successfully!" << endl;
 }
 
 void loadFromFile()
@@ -431,11 +587,41 @@ void eventPayment()
 }
 
 void eventMonitoring()
-{
+{   setColor(8, 0);
+    system("cls");
+
+    cout << "-------- Event Monitoring --------" << endl;
+    cout << "ID | Event Name                | Registrations" << endl;
+    cout << "-----------------------------------------------" << endl;
+
+    for (int i = 1; i < eventCount; i++) {
+        cout << eventId[i] << " | " << setw(25) << left << eventName[i]
+            << " | " << eventPax[i] << endl;
+    }
+
+    cout << "\nPress Enter to continue..." << endl;
+    cin.ignore();  
+    adminEventList();
 }
 
 void eventReporting()
 {
+    setColor(8, 0);
+    system("cls");
+
+    cout << "-------- Event Report --------" << endl;
+    for (int i = 1; i < eventCount; i++) {
+        cout << "Event ID: " << eventId[i] << endl;
+        cout << "Event Name: " << eventName[i] << endl;
+        cout << "Start Date: " << eventStartDate[i] << endl;
+        cout << "End Date: " << eventEndDate[i] << endl;
+        cout << "Total Registrations: " << eventPax[i] << endl;
+        cout << "----------------------------" << endl;
+    }
+
+    cout << "\nPress Enter to continue..." << endl;
+    cin.ignore(); 
+    adminEventList();
 }
 
 void exitProgram()
