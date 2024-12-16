@@ -18,7 +18,7 @@ void logIn();
 void loadData();
 void saveData();
 
-void adminEventList();
+void hostEventList();
 void guestEventList();
 void showEvents();
 
@@ -61,14 +61,17 @@ string eventName[records];
 string eventStartDate[records];
 string eventEndDate[records];
 string eventPlace[records];
+string eventAdvertisement[records];
 int eventPax[records];
+vector<Advertisement> advertisements;
+
+
 
 int eventCount = 0;  // Current number of events
 int nextEventId = 1;   // Auto-increment ID counter
 int headerColor = 8; // menu color
-
+int selectedEventId;
 //box character for aesthetic purpose
-
 int topRightCorner = 191;
 int topLeftCorner = 218; 
 int btmRightCorner = 217;
@@ -112,6 +115,7 @@ void saveData() {
             << eventStartDate[i] << ","
             << eventEndDate[i] << ","
             << eventPlace[i] << ","
+            << eventAdvertisement[i]<< ","
             << eventPax[i] << "\n";
     }
     outFile.close();
@@ -137,7 +141,7 @@ void loadData() {
         getline(ss, eventStartDate[eventCount], ',');
         getline(ss, eventEndDate[eventCount], ',');
         getline(ss, eventPlace[eventCount], ',');
-
+        getline(ss, eventAdvertisement[eventCount]);
         getline(ss, token);
         eventPax[eventCount] = stoi(token);
 
@@ -170,7 +174,7 @@ void modeSelection()
 
     switch (mode) {
     case 1: guestEventList(); break;
-    case 2: adminEventList(); break;
+    case 2: hostEventList(); break;
     default: cout << '\a'; main(); break;
     }
 }
@@ -234,7 +238,7 @@ void showEvents() {
 }
 
 
-void adminEventList() {
+void hostEventList() {
     int nextEventId = 1;   // Auto-increment ID counter
     int choice;
     setColor(8, 0);
@@ -255,7 +259,7 @@ void adminEventList() {
     case 2: createEvent(); break;
     case 3: modeSelection(); break;
     case 0: exitProgram(); break;
-    default: adminEventList();
+    default: hostEventList();
     }
 }
 
@@ -305,7 +309,7 @@ void showEventDetails()
         system("cls");
         cout << "\a" << "Invalid ID!" << endl;
         cout << "Press Anything to continue..." << endl;
-        _getch();
+        cin.ignore();
         showEventDetails();
 
     }
@@ -357,7 +361,7 @@ void createEvent() {
     cin.ignore(2); 
 
     saveData(); // Save data after adding a student
-    adminEventList();
+    hostEventList();
 }
 
 void joinEvent()
@@ -382,16 +386,18 @@ void editEvent() {
         guestEventList();
     }
     else {
+        selectedEventId = id;
         system("clear");
         cout << "[1] Event Advertisement" << endl;
         cout << "[2] Event " << endl;
         cout << "[3] Event " << endl;
         cout << "[4] Event " << endl;
-        cout << "[5] Event " << endl;
+        cout << "[5] Back To Menu " << endl;
         id = _getch() - '0';
 
         switch (id) {
         case 1: hostEventManagement();
+        case 5: hostEventList();
         }
     }
 }
@@ -491,29 +497,38 @@ struct Advertisement {
     }
 };
 
-vector<Advertisement> advertisements;
-
 void addAdvertisement(const string& title, const string& description, const string& pax, const string& fee) {
     advertisements.emplace_back(title, description, pax, fee);
     cout << "\a" << "Advertisement added successfully!" << endl;
     cin.ignore();
 }
 
+//void viewAdvertisement() {
+//    system("clear");
+//
+//    if (advertisements.empty()) {
+//        cout << "No advertisements available! Check back later." << endl;
+//        cin.ignore();
+//    }
+//    else {
+//        for (size_t i = 0; i < advertisements.size(); ++i) {
+//            cout << "\nAdvertisement " << i + 1 << ":" << endl;
+//            advertisements[i].display();
+//        } cin.ignore();
+//    }
+//}
+
 void viewAdvertisement() {
     system("clear");
 
-    if (advertisements.empty()) {
-        cout << "\a";
-        cout << "No advertisements available! Check back later." << endl;
-        cin.ignore();
-    }
-    else {
-        for (size_t i = 0; i < advertisements.size(); ++i) {
-            cout << "\nAdvertisement " << i + 1 << ":" << endl;
-            advertisements[i].display();
-        } cin.ignore();
-    }
+    cout << "Name:" << eventName[selectedEventId] << endl;
+    cout << "Start Date: " << eventStartDate[selectedEventId] << endl;
+    cout << "End Date: " << eventEndDate[selectedEventId] << endl;
+    cout << "Pax: " << eventPax[selectedEventId] << endl;
+    cin.ignore();
 }
+
+
 
 void editAdvertisement(size_t num, const string& newTitle, const string& newDescription, const string& newPax, const string& newFee) {
     system("clear");
@@ -550,12 +565,11 @@ void eventManagementDisplay() {
     system("clear");
 
     cout << "\n------- Advertisement Menu -------\n";
-    cout << "1. Add Advertisement\n";
-    cout << "2. View Advertisement\n";
-    cout << "3. Edit Advertisement\n";
-    cout << "4. Delete Advertisement\n";
-    cout << "5. Return to Main Menu\n";
-    cout << "Enter your option: ";
+    cout << "[1] Add Advertisement\n";
+    cout << "[2] View Advertisement\n";
+    cout << "[3] Edit Advertisement\n";
+    cout << "[4] Delete Advertisement\n";
+    cout << "[5] Return to Main Menu\n";
 
 }
 
@@ -564,8 +578,7 @@ void hostEventManagement() {
     system("clear");
     do {
         eventManagementDisplay();
-        cin >> choice;
-        cin.ignore();
+        choice = _getch() - '0';
 
         switch (choice) {
         case 1: {
@@ -627,7 +640,7 @@ void hostEventManagement() {
         }
 
         case 5:
-            cout << "Returning to Main Menu...\n";
+            hostEventList();
             break;
 
         default:
