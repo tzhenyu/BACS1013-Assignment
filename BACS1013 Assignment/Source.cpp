@@ -492,7 +492,7 @@ void deleteEvent(){
 
     cout << "Press any key to return to event list..." << endl;
     _getch();
-    adminEventList();
+    hostEventList();
     }
 
 void printReceipt() {
@@ -510,7 +510,7 @@ void printReceipt() {
     eventIdSelected = _getch() - '0';
 
     if (eventIdSelected == 0) {
-        adminEventList();  
+        hostEventList();  
         return;
     }
 
@@ -545,7 +545,7 @@ void printReceipt() {
 
     cout << "\nPress any key to return to the event list...";
     _getch();
-    adminEventList();
+    hostEventList();
   }
 
  
@@ -607,7 +607,7 @@ void eventMonitoring()
 
     cout << "\nPress Enter to continue..." << endl;
     cin.ignore();  
-    adminEventList();
+    hostEventList();
 }
 
 void eventReporting()
@@ -627,7 +627,7 @@ void eventReporting()
 
     cout << "\nPress Enter to continue..." << endl;
     cin.ignore(); 
-    adminEventList();
+    hostEventList();
 }
 
 void exitProgram()
