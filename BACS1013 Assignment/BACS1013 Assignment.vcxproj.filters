@@ -21,7 +21,7 @@
     <ClCompile Include="ignoreThis.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source1.cpp">
+    <ClCompile Include="source3.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
