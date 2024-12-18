@@ -156,7 +156,18 @@ void loadData() {
 
 void welcomeScreen()
 {
-    
+    cout << "\n\n\n\n\n\n";
+    cout << "     ████████╗ █████╗ ██████╗     ██╗   ██╗███╗   ███╗████████╗" << endl;
+    cout << "     ╚══██╔══╝██╔══██╗██╔══██╗    ██║   ██║████╗ ████║╚══██╔══╝" << endl;
+    cout << "        ██║   ███████║██████╔╝    ██║   ██║██╔████╔██║   ██║" << endl;
+    cout << "        ██║   ██╔══██║██╔══██╗    ██║   ██║██║╚██╔╝██║   ██║" << endl;
+    cout << "        ██║   ██║  ██║██║  ██║    ╚██████╔╝██║ ╚═╝ ██║   ██║" << endl;
+    cout << "        ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝     ╚═════╝ ╚═╝     ╚═╝   ╚═╝" << endl << endl;
+    cout << "                             WELCOME!                      " << endl << endl;
+    cout << "                     Press ENTER to continue...            " << endl;
+
+    cin.ignore();
+    modeSelection();
 }
 
 void modeSelection()
@@ -181,8 +192,35 @@ void modeSelection()
 
 void logIn()
 {
-    string username, password;
+    //Predefined correct username and password
+    string correctUsername = "admin";
+    string correctPassword = "12345";
 
+    string inputUsername, inputPassword;
+    bool loginSuccess = false;
+
+    while (!loginSuccess) {
+        // Input
+        cout << "\n--- Login Screen ---" << endl;
+        cout << "Enter Username: ";
+        cin >> inputUsername;
+
+        cout << "Enter Password: ";
+        cin >> inputPassword;
+
+        // Check password
+        if (inputUsername == correctUsername && inputPassword == correctPassword) {
+            // Password Correct
+            loginSuccess = true;
+            cout << "\nLogin Successful! Redirecting to Host Event Menu...\n" << endl;
+            hostEventList();            
+            break;
+        }
+        else {
+            // Incorrect password
+            cout << "\nUsername/Password Incorrect. Please try again.\n" << endl;
+        }
+    }
 }
 
 
