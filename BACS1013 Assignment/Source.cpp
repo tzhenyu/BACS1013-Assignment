@@ -181,17 +181,19 @@ void modeSelection()
     cout << right << setw(43) << "Are you?" << endl;
     cout << right << setw(44) << "[1]  Guest" << endl;
     cout << right << setw(44) << "[2]   Host" << endl;
-    mode = _getch() - '0';
+    mode = _getch() - '0'; 
 
     switch (mode) {
     case 1: guestEventList(); break;
-    case 2: hostEventList(); break;
+    case 2: logIn(); break;
     default: cout << '\a'; main(); break;
     }
 }
 
 void logIn()
 {
+    system("cls");
+
     //Predefined correct username and password
     string correctUsername = "admin";
     string correctPassword = "12345";
@@ -199,9 +201,10 @@ void logIn()
     string inputUsername, inputPassword;
     bool loginSuccess = false;
 
-    while (!loginSuccess) {
+    cout << "\n--- Login Screen ---" << endl << endl;
+
+    while (loginSuccess!=true) {
         // Input
-        cout << "\n--- Login Screen ---" << endl;
         cout << "Enter Username: ";
         cin >> inputUsername;
 
