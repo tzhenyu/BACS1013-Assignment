@@ -89,7 +89,7 @@ int main() {
     SetConsoleCP(437);        //able to display character box
     SetConsoleOutputCP(437);  //able to display character box
     changeCursorStyle(false); //make text cursor disappear
-    modeSelection();
+    welcomeScreen();
 }
 
 
@@ -156,15 +156,17 @@ void loadData() {
 
 void welcomeScreen()
 {
-    cout << "\n\n\n\n\n\n";
-    cout << "    _________     _        _______     _____  _____  ____    ____ _________ " << endl;
-    cout << "   |  _   _  |   / \\      |_   __ \\   |_   _||_   _||_   \\  / _ ||  _   _  |" << endl;
+    setColor(8, 0);
+
+    cout << "\n\n\n\n\n\n\n";
+    cout << "    _________     _        _______     _____  _____  ____    ____ _________     " << endl;
+    cout << "   |  _   _  |   / \\      |_   __ \\   |_   _||_   _||_   \\  / _ ||  _   _  | " << endl;
     cout << "   |_/ | | \\_|  / _ \\      | |__) |     | |    | |    |   \\/   | |_/ | | \\_|" << endl;
-    cout << "       | |     / ___ \\     |  __ /      | '    ' |    | |\\  /| |     | |    " << endl;
-    cout << "      _| |_  _/ /   \\ \\_  _| |  \\ \\_     \\ \\__/ /    _| |_\\/_| |_   _| |_   " << endl;
-    cout << "     |_____||____| |____||____| |___|     `.__.'    |_____||_____| |_____|  " << endl;
-    cout << "                                    WELCOME!                      " << endl << endl;
-    cout << "                            Press ENTER to continue...            " << endl;
+    cout << "       | |     / ___ \\     |  __ /      | '    ' |    | |\\  /| |     | |      " << endl;
+    cout << "      _| |_  _/ /   \\ \\_  _| |  \\ \\_     \\ \\__/ /    _| |_\\/_| |_   _| |_" << endl;
+    cout << "     |_____||____| |____||____| |___|     `.__.'    |_____||_____| |_____|      " << endl;
+    cout << "                                    WELCOME!                                    " << endl << endl;
+    cout << "                            Press ENTER to continue...                          " << endl;
 
     cin.ignore();
     modeSelection();
@@ -184,9 +186,16 @@ void modeSelection()
     mode = _getch() - '0'; 
 
     switch (mode) {
-    case 1: guestEventList(); break;
-    case 2: logIn(); break;
-    default: cout << '\a'; main(); break;
+    case 1: cout << "\n" << right << setw(50) << "Entering Guest mode...";
+        Sleep(1000); //delay one second
+        guestEventList(); break;
+    case 2: cout << "\n" << right << setw(56) << "Entering Host mode login screen...";
+        Sleep(1000);
+        logIn(); break;
+    default: cout << "\n" << right << setw(57) << "Invalid selection. Please try again.";
+        Sleep(1000);
+        cout << '\a';
+        system("cls"); main(); break;
     }
 }
 
